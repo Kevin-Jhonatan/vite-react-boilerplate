@@ -9,9 +9,9 @@ function App() {
   })
 
   return (
-    <>
+    <div className="p-4">
       <Button label={`Count is ${count}`} parentMethod={countMore} />
-    </>
+    </div>
   )
 }
 
