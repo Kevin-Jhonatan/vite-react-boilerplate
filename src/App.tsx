@@ -1,18 +1,8 @@
-import { useState } from 'react'
-import './App.css'
-import Button from "./components/Button/Button.tsx";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./route";
 
-function App() {
-  const [count, setCount] = useState(0)
-  const countMore = (() => {
-    setCount((count) => count + 1);
-  })
+export const App = () => {
+  return <RouterProvider router={router} />;
+};
 
-  return (
-    <div className="p-4">
-      <Button label={`Count is ${count}`} parentMethod={countMore} />
-    </div>
-  )
-}
-
-export default App
+export default App;
