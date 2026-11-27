@@ -71,7 +71,7 @@ const UserSelectField = ({ control, label, name, options }: UserSelectFieldProps
             />
           </div>
           {fieldState.error && (
-            <p className="text-sm text-red-500">{fieldState.error.message}</p>
+            <p className="text-sm text-danger">{fieldState.error.message}</p>
           )}
         </div>
       )}
@@ -118,7 +118,7 @@ export const UserFormModal = ({ open, user, onClose, onSubmit }: UserFormModalPr
       description={user ? "Actualiza la información del usuario." : "Completa los datos del nuevo usuario."}
       onClose={onClose}
     >
-      <Form onSubmit={handleSubmit(submit)}>
+      <Form noValidate onSubmit={handleSubmit(submit)}>
         <Input
           name="name"
           control={control}

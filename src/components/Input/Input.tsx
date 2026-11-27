@@ -42,13 +42,13 @@ export const Input = <TFieldValues extends FieldValues,>({
             aria-describedby={error ? errorId : undefined}
             aria-invalid={Boolean(error)}
             className={`rounded-lg border border-border bg-background px-4 py-2.5 text-foreground transition-all focus:outline-none focus:ring-2 focus:ring-accent ${
-              error ? "border-red-500 focus:ring-red-500" : ""
+              error ? "border-danger focus:ring-danger" : ""
             } ${props.className ?? ""}`}
           />
         )}
       />
       {error && (
-        <p id={errorId} className="text-sm text-red-500">
+        <p id={errorId} className="text-sm text-danger">
           {error.message}
         </p>
       )}

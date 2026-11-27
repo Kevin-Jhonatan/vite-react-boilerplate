@@ -23,7 +23,7 @@ export const createUserColumns = ({
     accessorKey: "status",
     header: "Estado",
     cell: ({ row }) => (
-      <span className={row.original.status === "Activo" ? "text-emerald-600" : "text-amber-600"}>
+      <span className={row.original.status === "Activo" ? "text-success" : "text-warning"}>
         {row.original.status}
       </span>
     ),
@@ -56,7 +56,7 @@ export const createUserColumns = ({
           <button
             type="button"
             aria-label={`Eliminar ${user.name}`}
-            className="cursor-pointer rounded-lg p-3 text-red-500 hover:bg-red-50 hover:text-red-600"
+            className="cursor-pointer rounded-lg p-3 text-danger hover:bg-danger-muted hover:text-danger"
             onClick={() => onDelete(user)}
           >
             <Trash2 aria-hidden="true" className="h-4 w-4" />

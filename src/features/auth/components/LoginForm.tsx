@@ -26,7 +26,7 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form noValidate onSubmit={handleSubmit(onSubmit)}>
       <Input
         name="email"
         control={control}

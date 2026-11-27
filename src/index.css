@@ -15,10 +15,16 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-muted: var(--danger-muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
 }
 
 /* Light theme */
 :root {
+  color-scheme: light;
   --background: #f8fafc;
   --foreground: #0f172a;
   --card: #ffffff;
@@ -28,10 +34,16 @@
   --muted-foreground: #64748b;
   --accent: #3b82f6;
   --accent-foreground: #ffffff;
+  --danger: #dc2626;
+  --danger-foreground: #ffffff;
+  --danger-muted: #fef2f2;
+  --success: #15803d;
+  --warning: #a16207;
 }
 
 /* Dark theme */
 [data-theme="dark"] {
+  color-scheme: dark;
   --background: #09090b;
   --foreground: #f8fafc;
   --card: #18181b;
@@ -41,4 +53,9 @@
   --muted-foreground: #a1a1aa;
   --accent: #60a5fa;
   --accent-foreground: #09090b;
+  --danger: #f87171;
+  --danger-foreground: #180a0a;
+  --danger-muted: #450a0a;
+  --success: #4ade80;
+  --warning: #facc15;
 }

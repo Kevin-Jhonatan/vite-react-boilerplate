@@ -106,7 +106,7 @@ export const UsersPage = () => {
             </Button>
             <Button
               type="button"
-              className="bg-red-600 text-white hover:bg-red-700"
+              className="bg-danger text-danger-foreground hover:bg-danger/90"
               onClick={confirmDelete}
             >
               Eliminar

@@ -1,13 +1,31 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 export type ThemeMode = "light" | "dark" | "system";
+export type ResolvedTheme = "light" | "dark";
 
 interface ThemeContextProps {
   theme: ThemeMode;
+  resolvedTheme: ResolvedTheme;
   setTheme: (theme: ThemeMode) => void;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
+
+const isThemeMode = (value: string | null): value is ThemeMode =>
+  value === "light" || value === "dark" || value === "system";
+
+const getStoredTheme = (storageKey: string, defaultTheme: ThemeMode): ThemeMode => {
+  const storedTheme = localStorage.getItem(storageKey);
+  return storedTheme && isThemeMode(storedTheme) ? storedTheme : defaultTheme;
+};
+
+const getResolvedTheme = (theme: ThemeMode): ResolvedTheme => {
+  if (theme !== "system") {
+    return theme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+};
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -21,32 +39,36 @@ export const ThemeProvider = ({
   storageKey = "theme",
 }: ThemeProviderProps) => {
   const [theme, setThemeState] = useState<ThemeMode>(
-    () => (localStorage.getItem(storageKey) as ThemeMode) || defaultTheme
+    () => getStoredTheme(storageKey, defaultTheme)
+  );
+  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() =>
+    getResolvedTheme(theme),
   );
 
   useEffect(() => {
     const root = window.document.documentElement;
-    const resolvedTheme =
-      theme === "system"
-        ? window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : theme;
-
-    root.setAttribute("data-theme", resolvedTheme);
-  }, [theme]);
-
-  useEffect(() => {
-    if (theme !== "system") return;
-
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = () => {
-      const resolved = mediaQuery.matches ? "dark" : "light";
-      window.document.documentElement.setAttribute("data-theme", resolved);
+    const applyTheme = () => {
+      const nextResolvedTheme =
+        theme === "system"
+          ? mediaQuery.matches
+            ? "dark"
+            : "light"
+          : theme;
+
+      root.setAttribute("data-theme", nextResolvedTheme);
+      root.style.colorScheme = nextResolvedTheme;
+      setResolvedTheme(nextResolvedTheme);
     };
 
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    applyTheme();
+
+    if (theme !== "system") {
+      return;
+    }
+
+    mediaQuery.addEventListener("change", applyTheme);
+    return () => mediaQuery.removeEventListener("change", applyTheme);
   }, [theme]);
 
   const setTheme = (newTheme: ThemeMode) => {
@@ -55,7 +77,7 @@ export const ThemeProvider = ({
   };
 
   return (
-    <ThemeContext value={{ theme, setTheme }}>
+    <ThemeContext value={{ theme, resolvedTheme, setTheme }}>
       {children}
     </ThemeContext>
   );

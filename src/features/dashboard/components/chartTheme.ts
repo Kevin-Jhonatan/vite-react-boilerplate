@@ -23,7 +23,15 @@ export const getChartTheme = (isDark: boolean) => ({
   },
   grid: {
     line: {
-      stroke: isDark ? "#27272a" : "#e2e8f0",
+      stroke: isDark ? "#3f3f46" : "#e2e8f0",
+    },
+  },
+  crosshair: {
+    line: {
+      stroke: isDark ? "#d4d4d8" : "#64748b",
+      strokeWidth: 1,
+      strokeOpacity: 0.8,
+      strokeDasharray: "6 6",
     },
   },
   tooltip: {
