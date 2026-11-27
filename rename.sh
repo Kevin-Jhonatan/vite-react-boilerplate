@@ -32,8 +32,8 @@ fi
 
 # Update index.html
 if [[ -f index.html ]]; then
-# Get current title
-OLD_TITLE=$(grep -oP '(?<=<title>).*?(?=</title>)' index.html)
+# Get current title using tools supported by macOS and Linux
+OLD_TITLE=$(sed -n 's:.*<title>\(.*\)</title>.*:\1:p' index.html | head -n 1)
 
   # Replace with new project name
   if [[ "$OSTYPE" == "darwin"* ]]; then
