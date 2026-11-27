@@ -86,6 +86,7 @@ Built with type safety, scalability, and developer experience in mind. A minimal
 - **[ESLint](https://eslint.org)** – Static code analysis with modern flat configuration
 - **[React Hook Form](https://react-hook-form.com)** – Performant and flexible form state management
 - **[Zod](https://zod.dev)** – TypeScript-first schema validation and type inference
+- **[TanStack Table](https://tanstack.com/table)** – Headless, typed table state and row models
 - **[vite-plugin-pwa](https://vite-pwa-org.netlify.app/)** – Progressive Web App support for Vite
 - **Custom reusable components** – Isolated, typed UI components (Input, Form)
 - **Schema-driven validation** – Single source of truth using Zod schemas
@@ -109,12 +110,41 @@ All code follows:
 │   ├── assets/             # Images, fonts, etc.
 │   ├── components/         # Reusable UI components
 │   │   ├── Form/
-│   │   └── Input/
-│   ├── examples/           # Usage examples / playgrounds
+│   │   ├── Input/
+│   │   ├── MetricCard/
+│   │   ├── Table/
+│   │   │   └── TablePagination.tsx
+│   │   └── Tooltip/
 │   ├── features/           # Feature-based modules
-│   ├── helpers/            # Pure utility functions
-│   ├── hooks/              # Custom React hooks
-│   ├── schemas/            # Zod schemas (validation & contracts)
+│   │   ├── auth/
+│   │   │   ├── components/ # Auth-only components
+│   │   │   ├── context/    # Auth-only providers
+│   │   │   ├── hooks/      # Auth-only hooks
+│   │   │   ├── pages/      # Auth routes and screens
+│   │   │   ├── schemas/    # Auth validation schemas
+│   │   │   ├── types/      # Auth contracts and types
+│   │   │   ├── utils/      # Auth-only pure utilities
+│   │   │   └── services/   # Auth API/adapters
+│   │   ├── dashboard/
+│   │   │   ├── components/
+│   │   │   ├── hooks/
+│   │   │   ├── pages/
+│   │   │   ├── types/
+│   │   │   └── utils/
+│   │   └── page-not-found/
+│   │       └── pages/
+│   │   └── users/
+│   │       ├── data/
+│   │       ├── pages/
+│   │       └── types/
+│   ├── context/             # Shared providers
+│   ├── hooks/               # Shared hooks
+│   ├── interfaces/          # Shared component contracts
+│   ├── layout/              # Shared page layouts
+│   │   └── components/      # Layout-specific composition
+│   ├── route/               # Router composition only
+│   ├── utils/              # Pure utilities shared by multiple features
+│   ├── components/          # Shared UI components
 │   ├── App.tsx             # Root component
 │   ├── main.tsx            # Application entry point
 │   └── index.css           # Global styles
@@ -124,13 +154,41 @@ All code follows:
 └── package.json
 ```
 
+The internal structure of a feature follows this template:
+
+```text
+feature-name/
+├── components/       # UI used only by this feature
+├── context/          # Feature-scoped providers
+├── hooks/            # Feature behavior and data hooks
+├── pages/            # Route-level screens
+├── schemas/          # Input and API validation
+├── services/         # API clients and adapters
+├── types/            # Feature contracts
+└── utils/            # Pure feature-specific helpers
+```
+
+Not every feature needs every directory. Create a branch only when the feature
+has code for that responsibility.
+
 **Guidelines**:
 
-- `components` → dumb, reusable UI
-- `features` → business logic + composition
-- `schemas` → single source of truth for validation
-- `hooks` → reusable behavior
-- `helpers` → framework-agnostic utilities
+- `src/components` → reusable UI shared by multiple features
+- `features` → business modules and their local composition
+- `features/<module>` → may contain `components`, `pages`, `hooks`, `context`, `types` and `utils`
+- `pages` → route-level composition; keep reusable UI in `components`
+- `schemas` and `types` → stay inside the feature unless several features truly share them
+- `services` → isolate API access from pages and presentational components
+- `src/hooks`, `src/context` and `src/utils` → shared code only
+- `src/layout/components` → reusable pieces of a specific layout, such as navigation
+- `src/route` → route definitions and composition, not page markup or business logic
+
+Feature-local code stays inside its feature. Move code to a shared directory only
+when there is real reuse across multiple features.
+
+Features may depend on shared code, but should not import another feature's
+internal files. If two features need the same behavior, extract a deliberately
+shared module instead of creating cross-feature coupling.
 
 ---
 

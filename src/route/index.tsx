@@ -1,8 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import AuthLayout from "../layout/AuthLayout";
 import DashboardLayout from "../layout/DashboardLayout";
-import LoginPage from "../features/auth/LoginPage";
-import DashboardPage from "../features/dashboard/DashboardPage";
 
 export const router = createBrowserRouter([
   {
@@ -10,7 +8,10 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/login",
-        element: <LoginPage />,
+        lazy: async () => {
+          const module = await import("../features/auth/pages/LoginPage");
+          return { Component: module.default };
+        },
       },
     ],
   },
@@ -20,20 +21,25 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        lazy: async () => {
+          const module = await import("../features/dashboard/pages/DashboardPage");
+          return { Component: module.default };
+        },
+      },
+      {
+        path: "users",
+        lazy: async () => {
+          const module = await import("../features/users/pages/UsersPage");
+          return { Component: module.default };
+        },
       },
     ],
   },
   {
     path: "*",
-    element: (
-      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center gap-4">
-        <h1 className="text-6xl font-bold text-accent">404</h1>
-        <p className="text-xl text-muted-foreground">Página no encontrada</p>
-        <a href="/" className="mt-4 px-6 py-2.5 bg-accent text-accent-foreground rounded-lg font-medium hover:opacity-90 transition-opacity">
-          Volver al Inicio
-        </a>
-      </div>
-    ),
+    lazy: async () => {
+      const module = await import("../features/page-not-found/pages/NotFoundPage");
+      return { Component: module.default };
+    },
   },
 ]);

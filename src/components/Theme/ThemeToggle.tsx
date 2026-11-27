@@ -1,16 +1,13 @@
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
-import { SunIcon, MoonIcon } from "../../icons";
 
 interface ThemeToggleProps {
   className?: string;
 }
 
 export const ThemeToggle = ({ className }: ThemeToggleProps) => {
-  const { theme, setTheme } = useTheme();
-
-  const isDark =
-    theme === "dark" ||
-    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   const handleToggle = () => {
     setTheme(isDark ? "light" : "dark");
@@ -21,12 +18,12 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
       type="button"
       onClick={handleToggle}
       className={`cursor-pointer p-2.5 rounded-xl border border-border bg-card text-card-foreground hover:opacity-80 transition-all duration-200 shadow-sm hover:scale-105 active:scale-95 flex items-center justify-center ${className ?? ""}`}
-      aria-label="Toggle theme"
+      aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
     >
       {isDark ? (
-        <SunIcon className="w-5 h-5 text-amber-400" />
+        <Sun className="h-5 w-5 text-amber-400" aria-hidden="true" />
       ) : (
-        <MoonIcon className="w-5 h-5 text-muted-foreground" />
+        <Moon className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
       )}
     </button>
   );

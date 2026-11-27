@@ -4,7 +4,7 @@ import ThemeToggle from "../components/Theme/ThemeToggle";
 export const AuthLayout = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <header className="absolute top-0 w-full p-6 flex justify-end items-center z-10">
+      <header className="absolute top-0 w-full p-4 flex justify-end items-center z-10">
         <ThemeToggle />
       </header>
 
