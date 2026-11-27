@@ -1,5 +1,5 @@
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "../../context/ThemeContext";
-import { SunIcon, MoonIcon } from "../../icons";
 
 interface ThemeToggleProps {
   className?: string;
@@ -24,9 +24,9 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
       aria-label="Toggle theme"
     >
       {isDark ? (
-        <SunIcon className="w-5 h-5 text-amber-400" />
+        <Sun className="h-5 w-5 text-amber-400" aria-hidden="true" />
       ) : (
-        <MoonIcon className="w-5 h-5 text-muted-foreground" />
+        <Moon className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
       )}
     </button>
   );
