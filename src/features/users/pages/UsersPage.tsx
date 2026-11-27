@@ -1,58 +1,44 @@
-import { useMemo, useState } from "react";
-import Table, { type TableColumn } from "../../../components/Table/Table";
-import { users } from "../data/users";
-import type { User } from "../types/user";
-
-const userColumns: TableColumn<User>[] = [
-  {
-    accessorKey: "name",
-    header: "Nombre",
-  },
-  {
-    accessorKey: "email",
-    header: "Correo",
-  },
-  {
-    accessorKey: "role",
-    header: "Rol",
-  },
-  {
-    accessorKey: "department",
-    header: "Departamento",
-  },
-  {
-    accessorKey: "location",
-    header: "Ubicación",
-  },
-  {
-    accessorKey: "lastAccess",
-    header: "Último acceso",
-  },
-  {
-    accessorKey: "status",
-    header: "Estado",
-    cell: ({ row }) => (
-      <span className={row.original.status === "Activo" ? "text-emerald-600" : "text-amber-600"}>
-        {row.original.status}
-      </span>
-    ),
-  },
-];
+import { Plus } from "lucide-react";
+import { useMemo } from "react";
+import Button from "../../../components/Button/Button";
+import Modal from "../../../components/Modal/Modal";
+import Table from "../../../components/Table/Table";
+import UserFormModal from "../components/UserFormModal";
+import { createUserColumns } from "../components/UserTableColumns";
+import { useUsers } from "../hooks/useUsers";
 
 export const UsersPage = () => {
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const perPage = 5;
-  const paginatedUsers = useMemo(
-    () => users.slice((page - 1) * perPage, page * perPage),
-    [page],
-  );
+  const {
+    users,
+    page,
+    perPage,
+    paginatedUsers,
+    isLoading,
+    setIsLoading,
+    editingUser,
+    isFormOpen,
+    deleteTarget,
+    setPage,
+    openCreateModal,
+    openEditModal,
+    closeFormModal,
+    saveUser,
+    toggleUserStatus,
+    requestDelete,
+    closeDeleteModal,
+    confirmDelete,
+  } = useUsers();
   const recordCount = isLoading ? 0 : users.length;
   const recordLabel = recordCount === 1 ? "registro" : "registros";
-
-  const handlePageChange = (nextPage: number) => {
-    setPage(nextPage);
-  };
+  const columns = useMemo(
+    () =>
+      createUserColumns({
+        onEdit: openEditModal,
+        onToggleStatus: toggleUserStatus,
+        onDelete: requestDelete,
+      }),
+    [openEditModal, requestDelete, toggleUserStatus],
+  );
 
   return (
     <section className="flex flex-col gap-4">
@@ -68,7 +54,11 @@ export const UsersPage = () => {
         </p>
       </header>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <Button type="button" className="w-full sm:w-auto" onClick={openCreateModal}>
+          <Plus aria-hidden="true" className="h-4 w-4" />
+          Registrar usuario
+        </Button>
         <button
           type="button"
           aria-pressed={isLoading}
@@ -80,14 +70,50 @@ export const UsersPage = () => {
       </div>
 
       <Table
-        columns={userColumns}
+        columns={columns}
         data={paginatedUsers}
         loading={isLoading}
         pagination={{ page, perPage, total: users.length }}
-        onPageChange={handlePageChange}
+        onPageChange={setPage}
         emptyMessage="No hay usuarios registrados"
         striped
       />
+
+      <UserFormModal
+        open={isFormOpen}
+        user={editingUser}
+        onClose={closeFormModal}
+        onSubmit={saveUser}
+      />
+
+      <Modal
+        open={Boolean(deleteTarget)}
+        title="Eliminar usuario"
+        description="Esta acción no se puede deshacer."
+        onClose={closeDeleteModal}
+      >
+        <div className="flex flex-col gap-4">
+          <p className="text-sm text-muted-foreground">
+            ¿Seguro que deseas eliminar a <strong>{deleteTarget?.name}</strong>?
+          </p>
+          <div className="flex flex-col-reverse gap-4 sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              className="bg-muted text-foreground hover:bg-muted/80"
+              onClick={closeDeleteModal}
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              className="bg-red-600 text-white hover:bg-red-700"
+              onClick={confirmDelete}
+            >
+              Eliminar
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </section>
   );
 };

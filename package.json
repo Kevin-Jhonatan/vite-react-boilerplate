@@ -12,6 +12,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.2",
+    "@nivo/bar": "^0.99.0",
+    "@nivo/core": "^0.99.0",
+    "@nivo/line": "^0.99.0",
+    "@nivo/pie": "^0.99.0",
     "@tailwindcss/vite": "^4.3.5",
     "@tanstack/react-table": "^9.3.1",
     "lucide-react": "^1.82.0",
@@ -19,6 +23,7 @@
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.92.0",
     "react-router-dom": "^7.18.7",
+    "sonner": "^2.0.8",
     "tailwindcss": "^4.3.5",
     "zod": "^4.6.7"
   },

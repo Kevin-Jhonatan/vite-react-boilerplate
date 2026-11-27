@@ -1,4 +1,10 @@
+import { lazy, Suspense } from "react";
 import MetricCard from "../../../components/MetricCard/MetricCard";
+import { dashboardData } from "../data/dashboard";
+
+const DashboardCharts = lazy(
+  () => import("../components/DashboardCharts")
+);
 
 export const DashboardPage = () => {
   return (
@@ -11,14 +17,34 @@ export const DashboardPage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <MetricCard title="Usuarios Activos" value="1,234" />
-        <MetricCard title="Ingresos" value="$12,345" />
-        <MetricCard title="Tasa de Conversión" value="4.5%" />
+        <MetricCard
+          title="Usuarios Activos"
+          value={dashboardData.metrics.activeUsers.toLocaleString("en-US")}
+        />
+        <MetricCard
+          title="Ingresos"
+          value={`$${dashboardData.metrics.revenue.toLocaleString("en-US")}`}
+        />
+        <MetricCard
+          title="Tasa de Conversión"
+          value={`${dashboardData.metrics.conversionRate}%`}
+        />
       </div>
 
-      <div className="bg-card border border-border rounded-xl p-4 shadow-sm h-80 flex items-center justify-center">
-        <p className="text-muted-foreground">Área para gráfico o tabla principal</p>
-      </div>
+      <Suspense
+        fallback={
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            {[1, 2].map((chart) => (
+              <div
+                key={chart}
+                className="h-80 animate-pulse rounded-xl border border-border bg-card"
+              />
+            ))}
+          </div>
+        }
+      >
+        <DashboardCharts data={dashboardData} />
+      </Suspense>
     </div>
   );
 };

@@ -27,7 +27,7 @@ export const Input = <TFieldValues extends FieldValues,>({
   const errorId = `${inputId}-error`;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <label htmlFor={inputId} className="text-sm font-medium text-foreground">
         {label}
       </label>

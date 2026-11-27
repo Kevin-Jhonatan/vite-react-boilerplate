@@ -1,10 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import AuthLayout from "../layout/AuthLayout";
 import DashboardLayout from "../layout/DashboardLayout";
-import LoginPage from "../features/auth/pages/LoginPage";
-import DashboardPage from "../features/dashboard/pages/DashboardPage";
-import NotFoundPage from "../features/page-not-found/pages/NotFoundPage";
-import UsersPage from "../features/users/pages/UsersPage";
 
 export const router = createBrowserRouter([
   {
@@ -12,7 +8,10 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/login",
-        element: <LoginPage />,
+        lazy: async () => {
+          const module = await import("../features/auth/pages/LoginPage");
+          return { Component: module.default };
+        },
       },
     ],
   },
@@ -22,16 +21,25 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        lazy: async () => {
+          const module = await import("../features/dashboard/pages/DashboardPage");
+          return { Component: module.default };
+        },
       },
       {
         path: "users",
-        element: <UsersPage />,
+        lazy: async () => {
+          const module = await import("../features/users/pages/UsersPage");
+          return { Component: module.default };
+        },
       },
     ],
   },
   {
     path: "*",
-    element: <NotFoundPage />,
+    lazy: async () => {
+      const module = await import("../features/page-not-found/pages/NotFoundPage");
+      return { Component: module.default };
+    },
   },
 ]);
